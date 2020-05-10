@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>jQuery滑动条插件JackWeiSlider</title>
+    <link rel="stylesheet" type="text/css" href="css/jackwei.slider.css">
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script src="js/jackwei.slider.js"></script>
+    <style type="text/css">
+        .btn { display: inline-block; border: solid 1px #ccc; padding: 10px 30px; margin: 10px; }
+        .btn:active { background-color: #ccc; }
+
+        div[class*='wrap'].disable { opacity: .2; }
+
+        .slider-wrap-A { height: 400px; width: 300px; }
+
+    </style>
+</head>
+<body>
+    <!-- 滑条 A -->
+    <span>滑条A</span>
+    <div class="wrapA">
+        <div id="sliderParentA" class="slider-wrap-A" style="padding: 20px;background-color: gray;"></div>
+        <p></p>
+        <span id="sliderParentValueA">0</span>
+    </div>
+    <p></p>
+    <!-- 滑条 B -->
+    <span>滑条B</span>
+    <div class="wrapB">
+        <div id="sliderParentB" style="padding: 20px;background-color: gray;"></div>
+        <p></p>
+        <span id="sliderParentValueB">0</span>
+    </div>
+
+    <!-- 按钮 -->
+    <div>
+        <span id="btnA" class="btn">禁用A</span>
+        <span id="btnB" class="btn">禁用B</span>
+    </div>
+
+    <!--  -->
+<script type="text/javascript">
+    var option = {
+        color: 'deepskyblue',
+        // width: '300px',          // 改成自动撑满，由外层div宽度决定
+        progress: 0.2,
+        handleSrc: 'img/slider_handle.png',
+        isCustomText: false
+    };
+    // 初始是否启用，初始化值。这里按百分比
+    let _sliderEnableA = true, _sliderEnableB = false;
+    let _value_A = 0.3;
+    let _value_B = 0.4;
+    $('#sliderParentValueA').text(_value_A)
+    $('#sliderParentValueB').text(_value_B)
+    
+
+    /**
+     * 滑条相关
+     */
+    // 滑条实例
+    let _elemSlider_A = $('#sliderParentA').jackWeiSlider(Object.assign({}, option, { direction: 'vertical' }));
+    let _elemSlider_B = $('#sliderParentB').jackWeiSlider(option);
+
+    // 给滑条初始化值，初始化状态
+    _elemSlider_A.setProgress(_value_A)
+    _elemSlider_B.setProgress(_value_B)
+
+
+    // 一些乱七八糟的逻辑
+    if(!_sliderEnableA) {
+        _elemSlider_A.disEnable();
+        $('#btnA').text('启用A')
+        $('.wrapA').addClass('disable')
+    } 
+    if(!_sliderEnableB) {
+        _elemSlider_B.disEnable();
+        $('#btnB').text('启用B')
+        $('.wrapB').addClass('disable')
+    }
+
+
+    /**
+     * TODO:  sliderParent A 相关事件 
+     */
+    // 滑条中
+    _elemSlider_A.setOnDragCallback(function (p) {
+        // p的值就是滑动中的值
+        console.log(p);
+        _value_A = p;
+        $('#sliderParentValueA').text(_value_A)
+    })
+    // 滑条结束
+    _elemSlider_A.setOnStopDragCallback(function () {
+        // code here
+        // window.alert('操作结束！')
+        console.log('操作结束，值为：' + _value_A)
+    })
+
+    /**
+     * TODO:  sliderParent B 相关事件 
+     */
+
+    // 滑条中B
+    _elemSlider_B.setOnDragCallback(function (p) {
+        // p的值就是滑动中的值
+        console.log(p);
+        _value_B = p;
+        $('#sliderParentValueB').text(_value_B)
+    })
+
+
+
+
+
+    // 按钮事件 - 启用和禁用
+    $('#btnA').on('click', function() {
+        if(_sliderEnableA) {
+            _elemSlider_A.disEnable()
+            $(this).text('启用A')
+        } else {
+            _elemSlider_A.enable()
+            $(this).text('禁用A')
+        }
+        _sliderEnableA = !_sliderEnableA;
+        
+        $('.wrapA').toggleClass('disable')
+    })
+    $('#btnB').on('click', function() {
+        if(_sliderEnableB) {
+            _elemSlider_B.disEnable()
+            $(this).text('启用B')
+        } else {
+            _elemSlider_B.enable()
+            $(this).text('禁用B')
+        }
+        _sliderEnableB = !_sliderEnableB;
+        
+        $('.wrapB').toggleClass('disable')
+    })
+
+
+
+    /* $('#sliderParent')
+        .jackWeiSlider(option)
+        // .setText('2018-4-5 02:39:00')
+        .setProgress(0.6)                            
+        .setOnStartDragCallback(function () {
+            // 这里执行触发滑动的操作
+            console.log('start');
+        })
+        .setOnDragCallback(function (p) {
+            // p的值就是滑动中的值
+            console.log(p);
+        })
+        .setOnStopDragCallback(function () {
+            // 这里执行滑动停止之后的操作
+            console.log('stop');
+        }); */
+</script>
+</body>
+</html>
