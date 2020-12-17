@@ -1,4 +1,4 @@
-#  JackWeiSlider
+#  Slider
 
 ## Project desc
 
